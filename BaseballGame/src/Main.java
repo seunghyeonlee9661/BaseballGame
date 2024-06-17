@@ -1,68 +1,120 @@
-import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+    public static void main(String[] args) {
+        int numArr[] = new int[3]; // 랜덤으로 생성된 숫자를 저장할 배열
+        int inputArr[] = new int[3]; // 유저가 입력한 숫자를 저장할 배열
 
-	public static void main(String[] args) {
-		// 1. 정답 생성
-		String answer = getAnswer(3);
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("컴퓨터가 숫자를 생성하였습니다. 답을 맞춰보세요!");
+        int strike; // 스트라이크 개수
+        int ball; // 볼 개수
 
-		// 2. 입력 초기화
-		String input = "";
-		int cnt = 0;
+        // 과정1: 랜덤으로 생성된 숫자 배열 초기화
+        initNumArr(numArr);
 
-		// 3. 입력 확인
-		while (!input.equals(answer)) {
-			System.out.println(++cnt + "번째 시도 : ");
-			input = scanner.nextLine();
-			checkInput(input, answer);
-		}
+        // 랜덤 숫자 확인용 출력
+        System.out.println("컴퓨터가 생성한 숫자 답을 맞춰보세요! ");
 
-		// 4. 결과 출력
-		System.out.println(cnt + "번만에 맞히셨습니다.");
-		System.out.println("게임을 종료합니다.");
-	}
+         /*
+        for (int x : numArr) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+         */
 
-	// 입력과 정답을 비교해 스트라이크와 볼을 출력하는 함수
-	private static void checkInput(String input, String answer) {
-		int ball = 0;
-		int strike = 0;
+        // 횟수 카운트 다운
+        Scanner sc = new Scanner(System.in);
+        int cnt = 0;
 
-		for (String s : input.split("")) {
-			if (answer.indexOf(s) >= 0) {
-				if (answer.indexOf(s) == input.indexOf(s))
-					strike++;
-				else
-					ball++;
-			}
-		}
+        // while문 돌리기
+        while (true) {
+            strike = 0;
+            ball = 0;
+            cnt++;
 
-		if (ball == 0 && strike == 0)
-			System.out.print("0B0S");
-		else {
-			if (ball > 0)
-				System.out.print(ball + "B");
-			if (strike > 0)
-				System.out.print(strike + "S");
-		}
-		System.out.println();
+            // 과정2: 유저로부터 숫자 입력 받기
+            System.out.println(cnt + "번째 시도 : ");
+            getUserInput(inputArr, sc);
 
-	}
+            // 과정3: 스트라이크와 볼 계산
+            calculateScore(numArr, inputArr, strike, ball);
 
-	// 중복없는 숫자 조합을 생성하는 함수
-	private static String getAnswer(int size) {
-		Random random = new Random();
-		String answer = "";
-		String number;
-		while (answer.length() < size) {
-			number = Integer.toString(random.nextInt(10));
-			if (answer.indexOf(number) > 0)
-				continue;
-			answer = answer + number;
-		}
-		return answer;
-	}
+            // 결과 출력
+            System.out.println(strike + "S" + ball + "B");
 
+            // 정답인 경우 게임 종료
+            if (strike == 3) {
+                System.out.println(cnt + "번 만에 맞혔습니다.");
+                System.out.println("게임을 종료합니다.");
+                break;
+            }
+        }
+        // 입력 종료
+        sc.close();
+    }
+
+    // 유저로부터 숫자 입력 받기
+    private static void getUserInput(int[] inputArr, Scanner sc) {
+        String input;
+        boolean validInput = false;
+        do {
+            input = sc.nextLine();
+
+            if (input.length() != 3) {
+                System.out.println("세 자리 숫자를 입력해야 합니다.");
+            } else {
+                try {
+                    for (int i = 0; i < inputArr.length; i++) {
+                        inputArr[i] = Integer.parseInt(String.valueOf(input.charAt(i)));
+                    }
+                    if (isValidInput(inputArr)) {
+                        validInput = true;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("숫자를 입력해야 합니다.");
+                }
+            }
+        } while (!validInput);
+    }
+
+    // 입력된 숫자가 유효한지 검사 (중복 확인)
+    private static boolean isValidInput(int[] inputArr) {
+        for (int i = 0; i < inputArr.length; i++) {
+            for (int j = i + 1; j < inputArr.length; j++) {
+                if (inputArr[i] == inputArr[j]) {
+                    System.out.println("중복된 숫자입니다. 다시 입력해주세요.");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // 스트라이크와 볼 계산 메서드
+    private static void calculateScore(int[] numArr, int[] inputArr, int strike, int ball) {
+        for (int i = 0; i < numArr.length; i++) {
+            for (int j = 0; j < inputArr.length; j++) {
+                if (numArr[i] == inputArr[j]) {
+                    if (i == j) {
+                        strike++;
+                    } else {
+                        ball++;
+                    }
+                }
+            }
+        }
+    }
+
+    // 랜덤 숫자 배열 초기화 메서드
+    private static void initNumArr(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = (int) (Math.random() * 9 + 1); // 1부터 9까지의 랜덤 숫자 생성
+            for (int j = 0; j < i; j++) {
+                if (arr[j] == arr[i]) {
+                    i--; // 중복된 숫자가 있으면 다시 생성
+                    break;
+                }
+            }
+        }
+    }
 }
+//

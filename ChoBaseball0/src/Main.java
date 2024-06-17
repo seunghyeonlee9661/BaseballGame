@@ -14,12 +14,10 @@ public class Main {
         // 랜덤 숫자 확인용 출력
         System.out.println("컴퓨터가 생성한 숫자 답을 맞춰보세요! ");
 
-         /*
         for (int x : numArr) {
             System.out.print(x + " ");
         }
         System.out.println();
-         */
 
         // 횟수 카운트 다운
         Scanner sc = new Scanner(System.in);
@@ -27,8 +25,6 @@ public class Main {
 
         // while문 돌리기
         while (true) {
-            strike = 0;
-            ball = 0;
             cnt++;
 
             // 과정2: 유저로부터 숫자 입력 받기
@@ -36,7 +32,9 @@ public class Main {
             getUserInput(inputArr, sc);
 
             // 과정3: 스트라이크와 볼 계산
-            calculateScore(numArr, inputArr, strike, ball);
+            int[] result = calculateScore(numArr, inputArr);
+            strike = result[0];
+            ball = result[1];
 
             // 결과 출력
             System.out.println(strike + "S" + ball + "B");
@@ -90,7 +88,9 @@ public class Main {
     }
 
     // 스트라이크와 볼 계산 메서드
-    private static void calculateScore(int[] numArr, int[] inputArr, int strike, int ball) {
+    private static int[] calculateScore(int[] numArr, int[] inputArr) {
+        int strike = 0;
+        int ball = 0;
         for (int i = 0; i < numArr.length; i++) {
             for (int j = 0; j < inputArr.length; j++) {
                 if (numArr[i] == inputArr[j]) {
@@ -102,12 +102,13 @@ public class Main {
                 }
             }
         }
+        return new int[]{strike, ball};
     }
 
     // 랜덤 숫자 배열 초기화 메서드
     private static void initNumArr(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = (int) (Math.random() * 9 + 1); // 1부터 9까지의 랜덤 숫자 생성
+            arr[i] = (int) (Math.random() * 9) + 1; // 1부터 9까지의 랜덤 숫자 생성
             for (int j = 0; j < i; j++) {
                 if (arr[j] == arr[i]) {
                     i--; // 중복된 숫자가 있으면 다시 생성
@@ -117,4 +118,3 @@ public class Main {
         }
     }
 }
-//
