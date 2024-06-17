@@ -16,7 +16,8 @@ public class Main {
 		// 3. 입력 확인
 		while (!input.equals(answer)) {
 			System.out.println(++cnt + "번째 시도 : ");
-			checkInput(scanner.nextLine(), answer);
+			input = scanner.nextLine();
+			checkInput(input, answer);
 		}
 
 		// 4. 결과 출력
