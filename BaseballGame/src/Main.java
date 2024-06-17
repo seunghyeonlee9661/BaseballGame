@@ -57,12 +57,8 @@ public class Main {
 		String number;
 		while (answer.length() < size) {
 			number = Integer.toString(random.nextInt(10));
-			for (String s : answer.split("")) {
-				if (s.equals(number)) {
-					number = "";
-					break;
-				}
-			}
+			if (answer.indexOf(number) > 0)
+				continue;
 			answer = answer + number;
 		}
 		return answer;
